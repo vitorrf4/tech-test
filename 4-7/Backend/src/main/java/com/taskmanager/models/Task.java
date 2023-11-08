@@ -10,7 +10,7 @@ public class Task {
     private String title;
     private String description;
     private Status taskStatus;
-    private enum Status {
+    public enum Status {
         PENDING,
         COMPLETED
     }
@@ -20,7 +20,7 @@ public class Task {
     public Task(String title, String description) {
         this.title = title;
         this.description = description;
-        Status status = Status.PENDING;
+        taskStatus = Status.PENDING;
     }
     
     public String getTitle() {
@@ -41,5 +41,13 @@ public class Task {
 
     public void completeTask() {
         taskStatus = Status.COMPLETED;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public Status getTaskStatus() {
+        return taskStatus;
     }
 }
