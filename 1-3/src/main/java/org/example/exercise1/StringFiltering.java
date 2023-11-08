@@ -11,11 +11,11 @@ public class StringFiltering {
                         .toList();
     }
 
-    public static boolean hasExactlyThreeLetters(String s) {
+    private static boolean hasExactlyThreeLetters(String s) {
         return s.length() == 3;
     }
 
-    public static boolean startsWithALowercase(String string) {
+    private static boolean startsWithALowercase(String string) {
         return string.startsWith("a");
     }
 }
