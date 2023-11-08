@@ -1,13 +1,21 @@
 package com.taskmanager.models;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Task {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
     private String title;
     private String description;
     private Status taskStatus;
     private enum Status {
         PENDING,
         COMPLETED
-    };
+    }
+
+    public Task() { }
 
     public Task(String title, String description) {
         this.title = title;
