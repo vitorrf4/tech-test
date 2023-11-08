@@ -1,4 +1,4 @@
-package org.example.exercise1;
+package org.example.question1;
 
 import java.util.List;
 

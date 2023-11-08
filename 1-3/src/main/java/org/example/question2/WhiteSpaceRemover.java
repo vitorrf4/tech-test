@@ -1,4 +1,4 @@
-package org.example.exercise2;
+package org.example.question2;
 
 public class WhiteSpaceRemover {
     public static String removeWhiteSpaces(String string) {
