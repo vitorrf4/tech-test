@@ -10,11 +10,11 @@ function init() {
 async function renderTasks(taskStatus) {
     let response;
 
-    if (!taskStatus) {
+    if (!taskStatus)
         response = await fetch("http://localhost:8080/tasks");
-    } else {
+    else
         response = await fetch(`http://localhost:8080/tasks/status/${taskStatus}`);
-    }
+
 
     changeTitle(taskStatus);
     currentPage = taskStatus;
@@ -25,11 +25,13 @@ async function renderTasks(taskStatus) {
 }
 
 function changeTitle(taskStatus) {
-    if (!taskStatus) {
+    if (!taskStatus)
         taskStatus = "All tasks";
-    } else {
-        taskStatus = taskStatus.charAt(0).toUpperCase() + taskStatus.slice(1) + " tasks";
+    else {
+        const titleWithUpperFirstLetter = taskStatus.charAt(0).toUpperCase() + taskStatus.slice(1) + " tasks";
+        taskStatus = titleWithUpperFirstLetter;
     }
+
     const divTitle = document.getElementById("h2_div_title");
     divTitle.innerHTML = taskStatus;
 }
@@ -107,16 +109,16 @@ async function deleteTask(taskId) {
 }
 
 async function saveTask() {
-    const taskTitle = document.getElementById("title");
+    const title = document.getElementById("title");
     const description = document.getElementById("description");
 
-    if (!taskTitle.value || !taskTitle.value.toString().trim() ||
+    if (!title.value || !title.value.toString().trim() ||
         !description.value || !description.value.toString().trim()) {
         alert("Fields cannot be empty");
         return;
     }
 
-    const taskJson = JSON.stringify({title: taskTitle.value, description: description.value});
+    const taskJson = JSON.stringify({title: title.value, description: description.value});
 
     await fetch("http://localhost:8080/tasks", {
         method: 'post',
@@ -126,7 +128,7 @@ async function saveTask() {
         .then(async res => await res.json())
         .then(res => {
             insertTaskIntoList(res);
-            taskTitle.value = "";
+            title.value = "";
             description.value = "";
         })
         .catch(err => {
@@ -134,7 +136,6 @@ async function saveTask() {
         });
 }
 
-// TODO add an error div that displays the error
 function errorHandler(err) {
     console.log(`Error status: ${err.status}`);
     console.log("Error:");
