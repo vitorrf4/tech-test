@@ -12,14 +12,26 @@ async function renderTasks(taskStatus) {
 
     if (!taskStatus) {
         response = await fetch("http://localhost:8080/tasks");
-        currentPage = '';
     } else {
         response = await fetch(`http://localhost:8080/tasks/status/${taskStatus}`);
-        currentPage = taskStatus;
     }
+
+    changeTitle(taskStatus);
+    currentPage = taskStatus;
+
     const jsonResponse = await response.json();
 
     createListFromTasks(jsonResponse);
+}
+
+function changeTitle(taskStatus) {
+    if (!taskStatus) {
+        taskStatus = "All tasks";
+    } else {
+        taskStatus = taskStatus.charAt(0).toUpperCase() + taskStatus.slice(1) + " tasks";
+    }
+    const divTitle = document.getElementById("h2_div_title");
+    divTitle.innerHTML = taskStatus;
 }
 
 function createListFromTasks(jsonTaskList) {
