@@ -7,7 +7,7 @@ public class StringFiltering {
     public static List<String> filterList(List<String> list) {
         return list.stream().filter(s ->
                         hasExactlyThreeLetters(s) &&
-                        startsWithALowercase(s))
+                        startsWithLowercaseA(s))
                         .toList();
     }
 
@@ -15,7 +15,7 @@ public class StringFiltering {
         return s.length() == 3;
     }
 
-    private static boolean startsWithALowercase(String string) {
+    private static boolean startsWithLowercaseA(String string) {
         return string.startsWith("a");
     }
 }

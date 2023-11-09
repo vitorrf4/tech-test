@@ -9,7 +9,9 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        questionThreeSampleTest();
+//        questionOneSampleTest();
+//        questionTwoSampleTest();
+//        questionThreeSampleTest();
     }
 
     public static void questionThreeSampleTest() {
@@ -31,18 +33,19 @@ public class Main {
     public static void questionTwoSampleTest() {
         String[] testStrings = {
                 "test",
-                "a string",
+                "string with regular spaces",
                 "   ",
                 " ",
                 "StringWithNoSpaces",
-                "  string   with lots of spaces    "
+                "  string   with lots of spaces    ",
+                "\n string that starts with \\n  "
         };
 
         for (String string : testStrings) {
             String stringWithoutWhiteSpaces = WhiteSpaceRemover.removeWhiteSpaces(string);
 
-            System.out.println("String before: " + string);
-            System.out.println("String with no whitespaces: " + stringWithoutWhiteSpaces);
+            System.out.println("String before: " + string + " | length: " + string.length());
+            System.out.println("String with no whitespaces: " + stringWithoutWhiteSpaces + " | length: " + stringWithoutWhiteSpaces.length());
         }
 
     }
