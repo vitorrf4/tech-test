@@ -22,7 +22,7 @@ public class TaskController {
 
     /**
      * Get all tasks.
-     * @return ResponseEntity with the list of all tasks
+     * @return 200 with the list of all the tasks
      */
     @GetMapping
     public ResponseEntity<List<Task>> getTasks() {
@@ -30,24 +30,13 @@ public class TaskController {
     }
 
     /**
-     * Get a specific task by ID.
-     * @param id the ID of the task to retrieve
-     * @return ResponseEntity with the task corresponding to the given ID, if found, otherwise returns not found
-     */
-    @GetMapping("/{id}")
-    public ResponseEntity<Task> getTask(@PathVariable Long id) {
-        var task = repository.findById(id);
-        return task.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    /**
      * Get a list of tasks by their status
      * @param status the status of the task, either pending or completed
-     * @return Status 400 if the sent status is neither pending nor completed
-     *         Status 200 if it's a valid taskStatus and responds with the tasks in the body
+     * @return 400 if the sent status is neither pending nor completed
+     *         200 if it's a valid taskStatus, response is the list of tasks
      */
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<Task>> getTaskByStatus(@PathVariable String status) {
+    public ResponseEntity<List<Task>> getTasksByStatus(@PathVariable String status) {
         String statusUpper = status.toUpperCase();
         if (!statusUpper.equals("COMPLETED") && !statusUpper.equals("PENDING")) {
             return ResponseEntity.badRequest().build();
@@ -59,10 +48,25 @@ public class TaskController {
     }
 
     /**
+     * Get a specific task by ID.
+     * @param id the ID of the task to retrieve
+     * @return 404 if the task with the given id does not exist
+     *         200 if it exists, responds with the task
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Task> getTask(@PathVariable Long id) {
+        var task = repository.findById(id);
+        if (task.isEmpty()) return ResponseEntity.notFound().build();
+
+        return task.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /**
      * Create a new task.
      * @param taskJson a map containing the title and description of the task
-     * @return 201 status with the uri where the newly created task
-     * can be found and the task itself on the response body
+     * @return 400 if either the title or the description are empty or invalid
+     *         201 if it has been successfully created, response is the uri where the newly created task
+     *         can be found and the task itself on the response body
      */
     @PostMapping
     public ResponseEntity<Task> createTask(@RequestBody Map<String, String> taskJson) {
@@ -81,18 +85,26 @@ public class TaskController {
         return ResponseEntity.created(URI.create("tasks/" + savedTask.getId())).body(savedTask);
     }
 
+    /**
+     * Change the current status of a given task
+     * @param id the id of the task to be updated
+     * @param status the new status to be assigned
+     * @return 404 if the user with the given id does not exist
+     *         400 if the sent status is neither completed nor pending
+     *         204 if the task status has been successfully updated
+     */
     @PutMapping("/{id}/{status}")
     public ResponseEntity<String> changeTaskStatus(@PathVariable Long id , @PathVariable String status) {
         var task = repository.findById(id);
 
         if (task.isEmpty()) return ResponseEntity.notFound().build();
 
-        String statusUpper = status.toUpperCase();
-        if (!statusUpper.equals("COMPLETED") && !statusUpper.equals("PENDING")) {
+        status = status.toUpperCase();
+        if (!status.equals("COMPLETED") && !status.equals("PENDING")) {
             return ResponseEntity.badRequest().build();
         }
 
-        var taskStatus = Task.Status.valueOf(statusUpper);
+        var taskStatus = Task.Status.valueOf(status);
 
         task.get().changeStatus(taskStatus);
         repository.save(task.get());
@@ -102,8 +114,9 @@ public class TaskController {
 
     /**
      * Delete a task by ID.
-     * @param id the ID of the task to delete
-     * @return ResponseEntity indicating the deletion status of the task
+     * @param id the ID of the task to be deleted
+     * @return 404 if the task with the given id does not exist
+     *         201 if the task has been successfully deleted;
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<List<Task>> deleteTask(@PathVariable Long id) {
