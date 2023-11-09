@@ -47,9 +47,18 @@ public class TaskController {
      * can be found and the task itself on the response body
      */
     @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody Map<String, String> taskJson) {
-        Task newTask = new Task(taskJson.get("title"), taskJson.get("description"));
-        var savedTask = repository.save(newTask);
+    public ResponseEntity createTask(@RequestBody Map<String, String> taskJson) {
+        String title = taskJson.get("title");
+        String description = taskJson.get("description");
+
+        if (title == null || description == null ||
+                title.isEmpty() || title.isBlank() ||
+                description.isEmpty() || description.isBlank()) {
+            return ResponseEntity.badRequest().body("Invalid request, there are empty fields");
+        }
+
+        Task newTask = new Task(title, description);
+        Task savedTask = repository.save(newTask);
 
         return ResponseEntity.created(URI.create("tasks/" + savedTask.getId())).body(savedTask);
     }
