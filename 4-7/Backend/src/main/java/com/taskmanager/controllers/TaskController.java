@@ -1,6 +1,5 @@
 package com.taskmanager.controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.taskmanager.models.Task;
 import com.taskmanager.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,24 @@ public class TaskController {
     @GetMapping
     public ResponseEntity<List<Task>> getTasks() {
         return ResponseEntity.ok(repository.findAll());
+    }
+
+    /**
+     * Get a list of tasks by their status
+     * @param status the status of the task, either pending or completed
+     * @return Status 400 if the sent status is neither pending nor completed
+     *         Status 200 if it's a valid taskStatus and the tasks in the body
+     */
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<Task>> getTaskByStatus(@PathVariable String status) {
+        String statusUpper = status.toUpperCase();
+        if (!statusUpper.equals("COMPLETED") && !statusUpper.equals("PENDING")) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        var taskStatus = Task.Status.valueOf(statusUpper);
+
+        return ResponseEntity.ok(repository.findAllByTaskStatus(taskStatus));
     }
 
     /**
