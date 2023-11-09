@@ -10,7 +10,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 //        questionOneSampleTest();
-//        questionTwoSampleTest();
+        questionTwoSampleTest();
 //        questionThreeSampleTest();
     }
 
@@ -33,6 +33,7 @@ public class Main {
     public static void questionTwoSampleTest() {
         String[] testStrings = {
                 "test",
+                "a string",
                 "string with regular spaces",
                 "   ",
                 " ",
@@ -42,7 +43,8 @@ public class Main {
         };
 
         for (String string : testStrings) {
-            String stringWithoutWhiteSpaces = WhiteSpaceRemover.removeWhiteSpaces(string);
+            var remover = new WhiteSpaceRemover();
+            String stringWithoutWhiteSpaces = remover.removeWhiteSpaces(string);
 
             System.out.println("String before: " + string + " | length: " + string.length());
             System.out.println("String with no whitespaces: " + stringWithoutWhiteSpaces + " | length: " + stringWithoutWhiteSpaces.length());
