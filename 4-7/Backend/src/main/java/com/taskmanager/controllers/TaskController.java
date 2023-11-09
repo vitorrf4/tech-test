@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController()
-@CrossOrigin(origins = "")
+@CrossOrigin(origins = "*")
 @RequestMapping(path = "/tasks")
 public class TaskController {
     private final TaskRepository repository;
