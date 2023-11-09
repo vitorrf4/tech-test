@@ -54,17 +54,25 @@ function insertTaskIntoList(task) {
 }
 
 function createButtons(li, task) {
+    const buttonsContainer = document.createElement("div");
+    buttonsContainer.classList.add("buttons-container");
+
     const deleteButton = document.createElement("button");
     deleteButton.innerHTML = "Delete";
     deleteButton.onclick = () => deleteTask(task.id);
+    deleteButton.id = "delete-button";
 
     const changeStatusButton = document.createElement("button");
     changeStatusButton.innerHTML = "Change status";
     changeStatusButton.onclick = () => changeStatus(task);
+    changeStatusButton.id = "status-button";
 
-    li.append(deleteButton, changeStatusButton);
+    buttonsContainer.append(changeStatusButton, deleteButton);
+    li.appendChild(buttonsContainer);
+
     return li;
 }
+
 
 async function changeStatus(task) {
     let newStatus;
@@ -101,6 +109,12 @@ async function deleteTask(taskId) {
 async function saveTask() {
     const taskTitle = document.getElementById("title");
     const description = document.getElementById("description");
+
+    if (!taskTitle.value || !taskTitle.trim || !description.value || !description.trim) {
+        alert("Fields cannot be empty");
+        return;
+    }
+
     const taskJson = JSON.stringify({title: taskTitle.value, description: description.value});
 
     await fetch("http://localhost:8080/tasks", {
@@ -119,6 +133,7 @@ async function saveTask() {
         });
 }
 
+// TODO add an error div that displays the error
 function errorHandler(err) {
     console.log(`Error status: ${err.status}`);
     console.log("Error:");
