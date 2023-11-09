@@ -111,6 +111,8 @@ async function saveTask() {
         .then(async res => await res.json())
         .then(res => {
             insertTaskIntoList(res);
+            taskTitle.value = "";
+            description.value = "";
         })
         .catch(err => {
             errorHandler(err);
