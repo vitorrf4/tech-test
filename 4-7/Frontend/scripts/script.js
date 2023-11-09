@@ -1,8 +1,14 @@
-async function getAllTasks() {
-    const response = await fetch("http://localhost:8080/tasks");
-    const json = await response.json();
+async function renderTasks(taskStatus) {
+    let response;
 
-    createListFromTasks(json);
+    if (!taskStatus) {
+        response = await fetch("http://localhost:8080/tasks");
+    } else {
+        response = await fetch(`http://localhost:8080/tasks/status/${taskStatus}`);
+    }
+    const jsonResponse = await response.json();
+
+    createListFromTasks(jsonResponse);
 }
 
 function createListFromTasks(jsonTaskList) {
@@ -38,11 +44,13 @@ function createButtons(li, task) {
 }
 
 async function markAsComplete(taskId) {
-    await fetch(`http://localhost:8080/tasks/${taskId}/complete`, {
+    console.log("task id: " + taskId);
+    await fetch(`http://localhost:8080/tasks/${taskId}/completed`, {
         method: 'put'
     })
         .then(() => {
             console.log(`task ${taskId} completed`);
+            renderTasks();
         })
         .catch(err => {
             console.log("Error: ");

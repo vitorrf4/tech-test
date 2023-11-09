@@ -44,7 +44,7 @@ public class TaskController {
      * Get a list of tasks by their status
      * @param status the status of the task, either pending or completed
      * @return Status 400 if the sent status is neither pending nor completed
-     *         Status 200 if it's a valid taskStatus and the tasks in the body
+     *         Status 200 if it's a valid taskStatus and responds with the tasks in the body
      */
     @GetMapping("/status/{status}")
     public ResponseEntity<List<Task>> getTaskByStatus(@PathVariable String status) {
@@ -65,7 +65,7 @@ public class TaskController {
      * can be found and the task itself on the response body
      */
     @PostMapping
-    public ResponseEntity createTask(@RequestBody Map<String, String> taskJson) {
+    public ResponseEntity<Task> createTask(@RequestBody Map<String, String> taskJson) {
         String title = taskJson.get("title");
         String description = taskJson.get("description");
 
@@ -82,7 +82,7 @@ public class TaskController {
     }
 
     @PutMapping("/{id}/{status}")
-    public ResponseEntity<String> completeTask(@PathVariable Long id , @PathVariable String status) {
+    public ResponseEntity<String> changeTaskStatus(@PathVariable Long id , @PathVariable String status) {
         var task = repository.findById(id);
 
         if (task.isEmpty()) return ResponseEntity.notFound().build();

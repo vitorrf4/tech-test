@@ -24,9 +24,25 @@
 
     <hr>
 
-    <h2>My Tasks</h2>
-    <ul id="task_list">
+    <table>
+        <tr>
+            <td>
+                <button onclick="renderTasks()">All</button>
+            </td>
+            <td>
+                <button onclick="renderTasks('pending')">Pending</button>
+            </td>
+            <td>
+                <button onclick="renderTasks('completed')">Completed</button>
+            </td>
+        </tr>
+    </table>
 
-    </ul>
+    <h2>My Tasks</h2>
+    <div id="task_list">
+        <ul id="task_ul">
+
+        </ul>
+    </div>
 </body>
 </html>
