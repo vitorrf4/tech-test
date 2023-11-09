@@ -39,8 +39,8 @@ public class Task {
         this.description = description;
     }
 
-    public void completeTask() {
-        taskStatus = Status.COMPLETED;
+    public void changeStatus(Status status) {
+        taskStatus = status;
     }
 
     public int getId() {

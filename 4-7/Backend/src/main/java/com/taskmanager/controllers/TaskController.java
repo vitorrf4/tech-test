@@ -30,6 +30,17 @@ public class TaskController {
     }
 
     /**
+     * Get a specific task by ID.
+     * @param id the ID of the task to retrieve
+     * @return ResponseEntity with the task corresponding to the given ID, if found, otherwise returns not found
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Task> getTask(@PathVariable Long id) {
+        var task = repository.findById(id);
+        return task.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /**
      * Get a list of tasks by their status
      * @param status the status of the task, either pending or completed
      * @return Status 400 if the sent status is neither pending nor completed
@@ -48,20 +59,9 @@ public class TaskController {
     }
 
     /**
-     * Get a specific task by ID.
-     * @param id the ID of the task to retrieve
-     * @return ResponseEntity with the task corresponding to the given ID, if found, otherwise returns not found
-     */
-    @GetMapping("/{id}")
-    public ResponseEntity<Task> getTask(@PathVariable Long id) {
-        var task = repository.findById(id);
-        return task.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    /**
      * Create a new task.
      * @param taskJson a map containing the title and description of the task
-     * @return 201 Created status code with the uri where the newly created task
+     * @return 201 status with the uri where the newly created task
      * can be found and the task itself on the response body
      */
     @PostMapping
@@ -81,22 +81,20 @@ public class TaskController {
         return ResponseEntity.created(URI.create("tasks/" + savedTask.getId())).body(savedTask);
     }
 
-    /**
-     * Mark a task as completed.
-     * @param id the ID of the task to mark as completed
-     * @return ResponseEntity indicating the completion status of the task
-     */
-    @PutMapping("/{id}/complete")
-    public ResponseEntity<String> completeTask(@PathVariable Long id ) {
+    @PutMapping("/{id}/{status}")
+    public ResponseEntity<String> completeTask(@PathVariable Long id , @PathVariable String status) {
         var task = repository.findById(id);
 
         if (task.isEmpty()) return ResponseEntity.notFound().build();
 
-        if (task.get().getTaskStatus() == Task.Status.COMPLETED)
-            return ResponseEntity.badRequest().body("This task has already been completed");
+        String statusUpper = status.toUpperCase();
+        if (!statusUpper.equals("COMPLETED") && !statusUpper.equals("PENDING")) {
+            return ResponseEntity.badRequest().build();
+        }
 
+        var taskStatus = Task.Status.valueOf(statusUpper);
 
-        task.get().completeTask();
+        task.get().changeStatus(taskStatus);
         repository.save(task.get());
 
         return ResponseEntity.noContent().build();
