@@ -108,15 +108,28 @@ async function deleteTask(taskId) {
         });
 }
 
+function areInputFieldsValid(title, description) {
+    if (!title || !title.toString().trim() ||
+        !description || !description.toString().trim()) {
+        alert("All fields must be filled");
+        return false;
+    }
+
+    if (title.length > 255 || description.length > 400) {
+        alert("Field values are too long, try again");
+        return false;
+    }
+
+    return true;
+}
+
 async function saveTask() {
     const title = document.getElementById("title");
     const description = document.getElementById("description");
 
-    if (!title.value || !title.value.toString().trim() ||
-        !description.value || !description.value.toString().trim()) {
-        alert("Fields cannot be empty");
+    if (!areInputFieldsValid(title.value, description.value))
         return;
-    }
+
 
     const taskJson = JSON.stringify({title: title.value, description: description.value});
 
