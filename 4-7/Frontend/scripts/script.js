@@ -110,7 +110,8 @@ async function saveTask() {
     const taskTitle = document.getElementById("title");
     const description = document.getElementById("description");
 
-    if (!taskTitle.value || !taskTitle.trim || !description.value || !description.trim) {
+    if (!taskTitle.value || !taskTitle.value.toString().trim() ||
+        !description.value || !description.value.toString().trim()) {
         alert("Fields cannot be empty");
         return;
     }
