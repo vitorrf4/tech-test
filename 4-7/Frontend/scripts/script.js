@@ -70,8 +70,7 @@ async function changeStatus(task) {
             renderTasks(currentPage);
         })
         .catch(err => {
-            console.log("Error: ");
-            console.log(err);
+            errorHandler(err);
         });
 }
 
@@ -83,8 +82,7 @@ async function deleteTask(taskId) {
             renderTasks(currentPage);
         })
         .catch(err => {
-            console.log("Error: ");
-            console.log(err);
+            errorHandler(err);
         });
 }
 
@@ -103,7 +101,12 @@ async function saveTask() {
             insertTaskIntoList(res);
         })
         .catch(err => {
-            console.log("Error: ");
-            console.log(err);
+            errorHandler(err);
         });
+}
+
+function errorHandler(err) {
+    console.log(`Error status: ${err.status}`);
+    console.log("Error:");
+    console.log(err);
 }
