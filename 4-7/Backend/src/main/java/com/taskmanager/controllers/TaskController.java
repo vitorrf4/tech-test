@@ -1,5 +1,6 @@
 package com.taskmanager.controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.taskmanager.models.Task;
 import com.taskmanager.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,7 @@ public class TaskController {
         if (title == null || description == null ||
                 title.isEmpty() || title.isBlank() ||
                 description.isEmpty() || description.isBlank()) {
-            return ResponseEntity.badRequest().body("Invalid request, there are empty fields");
+            return ResponseEntity.badRequest().build();
         }
 
         Task newTask = new Task(title, description);
@@ -68,13 +69,15 @@ public class TaskController {
      * @param id the ID of the task to mark as completed
      * @return ResponseEntity indicating the completion status of the task
      */
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/complete")
     public ResponseEntity<String> completeTask(@PathVariable Long id ) {
         var task = repository.findById(id);
+
         if (task.isEmpty()) return ResponseEntity.notFound().build();
 
         if (task.get().getTaskStatus() == Task.Status.COMPLETED)
             return ResponseEntity.badRequest().body("This task has already been completed");
+
 
         task.get().completeTask();
         repository.save(task.get());
