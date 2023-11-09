@@ -8,6 +8,7 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String title;
+    @Column(length = 400)
     private String description;
     private Status taskStatus;
     public enum Status {
